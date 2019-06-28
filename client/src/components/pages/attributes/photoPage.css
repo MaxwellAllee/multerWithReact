@@ -1,0 +1,18 @@
+/* .color{
+    background-color: blueviolet
+} */
+.center{
+    margin-top: auto;
+    
+}
+.moreColor{
+    text-align: center;
+    background-color:white;
+    padding: 0px;
+}
+.row{
+    min-height: 30vh;
+}
+.container{
+    height: 100%;
+}
