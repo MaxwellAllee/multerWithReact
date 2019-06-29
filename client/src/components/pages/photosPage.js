@@ -82,7 +82,5 @@ class photoPage extends React.Component {
             </div>
         )
     }
-
-
 }
 export default photoPage
