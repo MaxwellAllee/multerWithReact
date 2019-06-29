@@ -14,7 +14,7 @@ conn.once('open', () => {
   gfs.collection('uploads');
   exports.gfs = gfs
 });
-
+const image = ('./me.jpg')
 
 router.route('/getFiles')
   .get((req, res) => {
