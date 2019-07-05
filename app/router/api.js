@@ -21,7 +21,7 @@ router.route('/getFiles')
     gfs.files.find().toArray((err, files) => {
       // Check if files
       if (!files || files.length === 0) {
-        res.render('index', { files: false });
+        res.send({ files: false });
       } else {
         files.map(file => {
           if (
@@ -46,20 +46,14 @@ router.route('/getFiles')
     });
   });
 
-router.route('/upload')
+  router.route('/upload')
   .post(upload.single('file'), (req, res) => {
-    // res.json({ file: req.file });router.route('/arePhotos')
-  })
-  .get((req, res) => {
-    gfs.files.find().toArray((err, files) => {
-      console.log(files)
-    })
-
-    res.redirect('/');
+    res.json({ file: req.file });
+    // res.redirect('/');
   });
-
-// @route GET /files
-// @desc  Display all files in JSON
+  
+  // @route GET /files
+  // @desc  Display all files in JSON
 router.route('/files')
   .get((req, res) => {
     gfs.files.find().toArray((err, files) => {

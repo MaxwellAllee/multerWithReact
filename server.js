@@ -20,6 +20,6 @@ exports.app = app
 const routes = require("./app/router")
 app.use(routes)
 
-const port = 5001;
+const port = 3001;
 app.listen(port, () => console.log(`Server started on port http://localhost:${port}`));
           // Check if files
