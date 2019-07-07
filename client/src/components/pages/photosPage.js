@@ -10,40 +10,60 @@ import ListGroup from 'react-bootstrap/ListGroup'
 class photoPage extends React.Component {
     state = {
         filez: [],
-        photoz: {}
+        upload: [],
+        photoz: {},
+        isUploading: false,
+        isEmpty: true
+
     }
     componentDidMount() {
         this.getPhotos();
     }
     getPhotos = () => {
         API.arePhotos().then(res => {
-            if(res.data.length){
-            this.setState({ filez: res.data })}
-            else{
-                this.setState({filez:[]})
+            if (res.data.length) {
+                this.setState({ filez: res.data })
+            }
+            else {
+                this.setState({ filez: [] })
                 console.log("no photos")
             }
         }
         )
     }
-    submit =(e)=>{
+    handlFileChange = (event)=>{
+        this.setState({upload:event.target.value})
+        console.log(event.target.value)
+        !this.state.upload.length ? this.setState({isEmpty:false}): console.log("nothing happening")
+        console.log(this.state.isEmpty)
+    }
+    submit = (e) => {
         e.preventDefault()
-        const file = document.getElementById("file").files[0]
-        API.upload(file).then(res =>{
-            this.refs.filez.value = '';
-            this.getPhotos()
+        this.setState({ isUploading: true }, () => {
+            const file = document.getElementById("file").files[0]
+            API.upload(file).then(res => {
+                setTimeout(() => {
+                    this.setState({ isUploading: false, upload: "", isEmpty: true })
+                    this.refs.filez.value = '';
+                    console.log(this.state)
+                    this.getPhotos()
+                }, 1000)
 
+            })
         })
-       
+
+
     }
     deleted = (ids) => {
-       
-         API.deleted(ids).then(res=>{
+
+        API.deleted(ids).then(res => {
             this.getPhotos()
-         })
+        })
     }
 
     render() {
+        const { isUploading } = this.state;
+        const {isEmpty} = this.state
         return (
             <div className="color">
                 <Container fluid="true">
@@ -53,9 +73,21 @@ class photoPage extends React.Component {
                             <h1 >Mongo File Uploads</h1>
                             <form encType="multipart/form-data">
                                 <div>
-                                    <input type="file" name="file" id="file" ref="filez"/>
+                                    <input
+                                        type="file"
+                                        name="file"
+                                        id="file"
+                                        ref="filez"
+                                        onChange = {this.handlFileChange}
+                                    />
                                 </div>
-                                <Button type="button" onClick={this.submit} value="Submit">Submit</Button>
+                                <Button
+                                    variant="primary"
+                                    disabled={isUploading||isEmpty}
+                                    onClick={!isUploading ? this.submit : null}
+                                >
+                                    {isUploading ? 'Uploading…' : 'Upload'}
+                                </Button>
                             </form>
                             <hr />
                             {this.state.filez.length ? (
@@ -68,7 +100,7 @@ class photoPage extends React.Component {
                                                         <div>
                                                             <img src={`/api/image/${filez.filename}`} alt={filez._id} height="42" width="42"></img>
                                                         </div>
-                                                        <Button variant="danger" onClick={() => { this.deleted(filez._id)} }>Danger</Button>
+                                                        <Button variant="danger" onClick={() => { this.deleted(filez._id) }}>Delete</Button>
                                                     </div>
                                                 ) : (
                                                         <source src="" type="video/mp4"></source>
