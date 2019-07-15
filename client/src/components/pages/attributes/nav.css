@@ -1,0 +1,13 @@
+.linkStyle{
+    text-decoration: none;
+    margin-right: 30px;
+    color: darkgrey
+}
+.linkStyle:hover{
+    text-decoration: none;
+    color: darkgrey;
+    text-shadow: 2px 2px 8px #000000;
+}
+#responsive-navbar-nav{
+    margin-right: 30px;
+}

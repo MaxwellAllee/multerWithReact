@@ -9,6 +9,7 @@ import ListGroup from 'react-bootstrap/ListGroup'
 
 class photoPage extends React.Component {
     state = {
+
         filez: [],
         upload: [],
         photoz: {},
@@ -21,6 +22,7 @@ class photoPage extends React.Component {
     }
     getPhotos = () => {
         API.arePhotos().then(res => {
+            document.getElementById("sub").style.visibility = "hidden"
             if (res.data.length) {
                 this.setState({ filez: res.data })
             }
@@ -31,10 +33,11 @@ class photoPage extends React.Component {
         }
         )
     }
-    handlFileChange = (event)=>{
-        this.setState({upload:event.target.value})
+    handlFileChange = (event) => {
+        document.getElementById("sub").style.visibility = "visible"
+        this.setState({ upload: event.target.value })
         console.log(event.target.value)
-        !this.state.upload.length ? this.setState({isEmpty:false}): console.log("nothing happening")
+        !this.state.upload.length ? this.setState({ isEmpty: false }) : console.log("nothing happening")
         console.log(this.state.isEmpty)
     }
     submit = (e) => {
@@ -63,7 +66,7 @@ class photoPage extends React.Component {
 
     render() {
         const { isUploading } = this.state;
-        const {isEmpty} = this.state
+        const { isEmpty } = this.state
         return (
             <div className="color">
                 <Container fluid="true">
@@ -71,19 +74,26 @@ class photoPage extends React.Component {
                         <Col></Col>
                         <Col className="moreColor">
                             <h1 >Mongo File Uploads</h1>
+
                             <form encType="multipart/form-data">
-                                <div>
-                                    <input
-                                        type="file"
-                                        name="file"
-                                        id="file"
-                                        ref="filez"
-                                        onChange = {this.handlFileChange}
-                                    />
-                                </div>
+                                <label htmlFor="file">{isEmpty ? (<div className="inputBox">Select File</div>) : (
+                                    this.state.upload.replace(/^.*\\/, "")
+                                    // console.log(this.state.upload)
+                                )}</label>
+                                <input
+                                    type="file"
+                                    name="file"
+                                    id="file"
+                                    ref="filez"
+                                    className="inputfile"
+                                    onChange={this.handlFileChange}
+                                />
+
+                                <br />
                                 <Button
+                                    id="sub"
                                     variant="primary"
-                                    disabled={isUploading||isEmpty}
+                                    disabled={isUploading || isEmpty}
                                     onClick={!isUploading ? this.submit : null}
                                 >
                                     {isUploading ? 'Uploading…' : 'Upload'}
@@ -103,7 +113,16 @@ class photoPage extends React.Component {
                                                         <Button variant="danger" onClick={() => { this.deleted(filez._id) }}>Delete</Button>
                                                     </div>
                                                 ) : (
-                                                        <source src="" type="video/mp4"></source>
+                                                        <div>
+                                                            <video width="320" height="240" controls key ={filez._id} >
+                                                                <source src={`api/video/${filez.filename}`} type="video/mp4" />
+
+                                                            </video>
+                                                            <div>
+                                                            <Button variant="danger" onClick={() => { this.deleted(filez._id) }}>Delete</Button>
+                                                            </div>
+                                                            
+                                                        </div>
                                                     )}
                                             </ListGroup.Item>
                                         )
