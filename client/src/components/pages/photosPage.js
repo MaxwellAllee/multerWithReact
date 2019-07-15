@@ -67,83 +67,99 @@ class photoPage extends React.Component {
     render() {
         const { isUploading } = this.state;
         const { isEmpty } = this.state
+        
         return (
             <div className="color">
-                <Container fluid="true">
-                    <Row>
-                        <Col></Col>
-                        <Col className="moreColor">
-                            <h1 >Mongo File Uploads</h1>
+                <div className="moreColor">
+                    <h1 >Mongo File Uploads</h1>
 
-                            <form encType="multipart/form-data">
-                                <label htmlFor="file">{isEmpty ? (<div className="inputBox">Select File</div>) : (
-                                    this.state.upload.replace(/^.*\\/, "")
-                                    // console.log(this.state.upload)
-                                )}</label>
-                                <input
-                                    type="file"
-                                    name="file"
-                                    id="file"
-                                    ref="filez"
-                                    className="inputfile"
-                                    onChange={this.handlFileChange}
-                                />
+                    <form encType="multipart/form-data">
+                        <label htmlFor="file">{isEmpty ? (<div className="inputBox">Select File</div>) : (
+                            this.state.upload.replace(/^.*\\/, "")
+                            // console.log(this.state.upload)
+                        )}</label>
+                        <input
+                            type="file"
+                            name="file"
+                            id="file"
+                            ref="filez"
+                            className="inputfile"
+                            onChange={this.handlFileChange}
+                        />
 
-                                <br />
-                                <Button
-                                    id="sub"
-                                    variant="primary"
-                                    disabled={isUploading || isEmpty}
-                                    onClick={!isUploading ? this.submit : null}
-                                >
-                                    {isUploading ? 'Uploading…' : 'Upload'}
-                                </Button>
-                            </form>
-                            <hr />
-                            {this.state.filez.length ? (
-                                <ListGroup>
-                                    {this.state.filez.map(filez => {
-                                        return (
-                                            <ListGroup.Item key={filez._id}>
+                        <br />
+                        <Button
+                            id="sub"
+                            variant="primary"
+                            disabled={isUploading || isEmpty}
+                            onClick={!isUploading ? this.submit : null}
+                        >
+                            {isUploading ? 'Uploading…' : 'Upload'}
+                        </Button>
+                    </form>
+                    <hr />
+                    {this.state.filez.length ? (
+                        <Container>
+                            <Row>
+                            {this.state.filez.map((filez,count)=> {
+
+                                return (
+                                    !count % 4 ? (
+                                        // <Row>
+                                            <Col key={filez._id}>
+
                                                 {filez.isImage ? (
                                                     <div>
                                                         <div>
-                                                            <img src={`/api/image/${filez.filename}`} alt={filez._id} height="42" width="42"></img>
+                                                            <img src={`/api/image/${filez.filename}`} alt={filez._id} width="200"></img>
                                                         </div>
                                                         <Button variant="danger" onClick={() => { this.deleted(filez._id) }}>Delete</Button>
                                                     </div>
                                                 ) : (
                                                         <div>
-                                                            <video width="320" height="240" controls key ={filez._id} >
+                                                            <video width="320" height="240" controls key={filez._id} >
                                                                 <source src={`api/video/${filez.filename}`} type="video/mp4" />
 
                                                             </video>
                                                             <div>
-                                                            <Button variant="danger" onClick={() => { this.deleted(filez._id) }}>Delete</Button>
+                                                                <Button variant="danger" onClick={() => { this.deleted(filez._id) }}>Delete</Button>
                                                             </div>
-                                                            
+                                                            null
                                                         </div>
                                                     )}
-                                            </ListGroup.Item>
-                                        )
-                                    })}
+                                            </Col> ) : (
+                                            <Col key={filez._id}>
 
-                                </ListGroup>
-                            ) : (
-                                    <ListGroup>
+                                                {filez.isImage ? (
+                                                    <div>
+                                                        <div>
+                                                            <img src={`/api/image/${filez.filename}`} alt={filez._id} width="200"></img>
+                                                        </div>
+                                                        <Button variant="danger" onClick={() => { this.deleted(filez._id) }}>Delete</Button>
+                                                    </div>
+                                                ) : (
+                                                        <div>
+                                                            <video width="320" height="240" controls key={filez._id} >
+                                                                <source src={`api/video/${filez.filename}`} type="video/mp4" />
 
-                                        <ListGroup.Item>
-                                            <h1>No Files at this time!</h1>
-                                        </ListGroup.Item>
+                                                            </video>
+                                                            <div>
+                                                                <Button variant="danger" onClick={() => { this.deleted(filez._id) }}>Delete</Button>
+                                                            </div>
 
+                                                        </div>
+                                                    )}
+                                            </Col>)
+                                )
+                            })}
+                            </Row>
+                        </Container>
+                    ) : (
 
-                                    </ListGroup>
-                                )}
-                        </Col>
-                        <Col>
-                        </Col>
-                    </Row>
-                </Container>
+                            <h1>No Files at this time!</h1>
+
+                        )}
+                </div>
             </div>
         )
     }

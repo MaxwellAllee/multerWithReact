@@ -9,6 +9,8 @@
     text-align: center;
     background-color:white;
     padding: 0px;
+    max-width: 90vw;
+    margin: auto;
 }
 .row{
     min-height: 30vh;
